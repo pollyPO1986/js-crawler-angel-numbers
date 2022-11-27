@@ -1,6 +1,6 @@
-export const FLODER_CATEGORY = {
-  IMAGES: 'data/images',
-  JSON: 'data/json',
+export const FOLDER_CATEGORY = {
+  IMAGES: 'data/images/',
+  JSON: 'data/json/',
 };
 
 // 資料來源網站 URL

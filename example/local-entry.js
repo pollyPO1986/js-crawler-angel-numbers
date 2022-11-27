@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer';
+import { FLODER_CATEGORY as FOLDER_CATEGORY } from './utils/global-config.js';
 
 (async () => {
   /**
@@ -24,7 +25,10 @@ import puppeteer from 'puppeteer';
   const page = await browser.newPage();
 
   await page.goto('https://www.google.com/');
-  await page.screenshot({ path: 'data/images/example.png' }); // 截圖是用無視窗的方式（ browser 不帶 options ）
+
+  // 截圖是用無視窗的方式（ browser 不帶 options ）
+  await page.screenshot({ path: `${FOLDER_CATEGORY.IMAGES}example.png` });
+  // await page.screenshot({ path: 'data/images/example.png' });
 
   await browser.close();
 })();
