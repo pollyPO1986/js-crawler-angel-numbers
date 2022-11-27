@@ -1,6 +1,6 @@
 import axios from 'axios';
 import puppeteer from 'puppeteer';
-import { RESOURCE_SITE, FOLDER_CATEGORY } from './utils/global-config.js';
+import targetSourceOne from './crawler/target-one/index.js';
 
 (async () => {
   const response = await axios.get('http://host.docker.internal:9222/json/version', {
@@ -15,10 +15,9 @@ import { RESOURCE_SITE, FOLDER_CATEGORY } from './utils/global-config.js';
     },
     slowMo: 100,
   });
-  const page = await browser.newPage();
 
-  await page.goto(RESOURCE_SITE.TARGET_ONE);
-  await page.screenshot({ path: `${FOLDER_CATEGORY.IMAGES}example.png` }); // 截圖是用無視窗的方式（ browser 不帶 options ）
+  // 訪問 Resource site - target one
+  await targetSourceOne(browser);
 
   // await browser.close();
 })();
