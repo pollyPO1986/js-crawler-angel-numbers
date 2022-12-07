@@ -1,4 +1,5 @@
 import { RESOURCE_SITE } from '../../utils/global-config.js';
+import getItemInfo from './modules/item-info.js';
 
 export default async (browser) => {
   const page = await browser.newPage();
@@ -10,13 +11,13 @@ export default async (browser) => {
    * 因為取回來會是一包 [elementHolder {}, elementHolder {}, elementHolder {},...]
    * 還需要使用 await page.evaluate((element) => element.href, element) 去處理
    */
-  const targetElements = await page.$$eval('#main-contents .cps-post-main > p > a', (elements) => {
-    return elements.map((item) => ({ name: item.text, url: item.href }));
+  const angelNumberLinkList = await page.$$eval('#main-contents .cps-post-main > p > a', (elements) => {
+    return elements.map((item) => ({ name: item.innerText, url: item.href }));
   });
+  console.log('EE', angelNumberLinkList);
 
-  console.log('EE', targetElements);
-
-  // for (const item of itemsList) {
-  //   console.log('HH', item);
-  // }
+  for (const linkItem of angelNumberLinkList) {
+    const _finalData = await getItemInfo(browser, page, linkItem);
+    console.log('HH', linkItem, _finalData);
+  }
 };
