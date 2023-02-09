@@ -19,5 +19,5 @@ import targetSourceOne from './crawler/target-one/index.js';
   // 訪問 Resource site - target one
   await targetSourceOne(browser);
 
-  // await browser.close();
+  await browser.close();
 })();
