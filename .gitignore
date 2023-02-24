@@ -2,6 +2,8 @@
 node_modules
 data
 data/*
+logs
+logs/*
 
 # local env files
 .env

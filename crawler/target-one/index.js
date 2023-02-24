@@ -1,6 +1,7 @@
 import { RESOURCE_SITE } from '../../utils/global-config.js';
 import { convertToTextHalfWidth } from '../../utils/tools/formatter.js';
 import angelNumberList from '../../utils/tools/custom-mapping.js';
+import { simpleLogger } from '../../utils/tools/write-access.js';
 import getItemInfo from './modules/item-info.js';
 
 export default async (browser) => {
@@ -27,8 +28,14 @@ export default async (browser) => {
     return result;
   }, []);
 
+  simpleLogger('開始爬取', ['Start']);
+
   for (const linkItem of customWebsiteLinkList) {
+    simpleLogger('Start', ['Number', `${linkItem.name}`]);
     const _finalData = await getItemInfo(browser, page, linkItem);
-    console.log('HH', linkItem, _finalData);
+    simpleLogger('End', ['Number', `${linkItem.name}`]);
+    console.log('HH', _finalData);
   }
+
+  simpleLogger('結束爬取', ['Complete']);
 };
