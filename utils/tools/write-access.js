@@ -2,7 +2,8 @@ import * as fs from 'node:fs';
 import { convertToDate } from './date-formatter.js';
 
 const jsonParser = (data, filename = 'text') => {
-  fs.writeFileSync(`${filename}.json`, JSON.stringify(data));
+  console.log(filename);
+  // fs.writeFileSync(`${filename}.json`, JSON.stringify(data));
 };
 
 const simpleLogger = (msg, tagArray) => {
@@ -16,7 +17,14 @@ const simpleLogger = (msg, tagArray) => {
   }
 
   let logTagName = `[${tagArray.join('][')}]`;
-  const { Y: years, M: month, D: date, h: hour, m: minute, s: second } = convertToDate(new Date());
+  const {
+    Y: years,
+    M: month,
+    D: date,
+    h: hour,
+    m: minute,
+    s: second,
+  } = convertToDate(new Date());
 
   // 寫入 log
   fs.writeFile(

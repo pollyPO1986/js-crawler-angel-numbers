@@ -1,7 +1,8 @@
 import { RESOURCE_SITE } from '../../utils/global-config.js';
 import { convertToTextHalfWidth } from '../../utils/tools/formatter.js';
 import angelNumberList from '../../utils/tools/custom-mapping.js';
-import { simpleLogger } from '../../utils/tools/write-access.js';
+import { jsonParser, simpleLogger } from '../../utils/tools/write-access.js';
+import { convertToDate } from '../../utils/tools/date-formatter.js';
 import getItemInfo from './modules/item-info.js';
 
 export default async (browser) => {
@@ -14,12 +15,17 @@ export default async (browser) => {
    * 因為取回來會是一包 [elementHolder {}, elementHolder {}, elementHolder {},...]
    * 還需要使用 await page.evaluate((element) => element.href, element) 去處理
    */
-  const sourceLinkList = await page.$$eval('#main-contents .cps-post-main > p > a', (elements) => {
-    return elements.map((item) => ({ name: item.innerText, url: item.href }));
-  });
+  const sourceLinkList = await page.$$eval(
+    '#main-contents .cps-post-main > p > a',
+    (elements) => {
+      return elements.map((item) => ({ name: item.innerText, url: item.href }));
+    }
+  );
 
   const customWebsiteLinkList = sourceLinkList.reduce((result, currentItem) => {
-    const isTrue = angelNumberList.includes(convertToTextHalfWidth(currentItem.name));
+    const isTrue = angelNumberList.includes(
+      convertToTextHalfWidth(currentItem.name)
+    );
 
     if (isTrue) {
       result.push(currentItem);
@@ -31,10 +37,28 @@ export default async (browser) => {
   simpleLogger('開始爬取', ['Start']);
 
   for (const linkItem of customWebsiteLinkList) {
+    const {
+      Y: years,
+      M: month,
+      D: date,
+      h: hour,
+      m: minute,
+      s: second
+    } = convertToDate(new Date());
+    const _saveTime = `${years}-${month}-${date}`;
+    const _linkItemName = convertToTextHalfWidth(linkItem.name);
+
     simpleLogger('Start', ['Number', `${linkItem.name}`]);
     const _finalData = await getItemInfo(browser, page, linkItem);
     simpleLogger('End', ['Number', `${linkItem.name}`]);
-    console.log('HH', _finalData);
+
+    jsonParser(
+      _finalData,
+      `./data/json/targetSourceOne_${_saveTime}_[${_linkItemName}]`
+    );
+    // jsonParser(_finalData, `../../data/json/targetSourceOne_${_saveTime}_${linkItem.name}`);
+    console.log('name', _linkItemName);
+    console.log('data', _finalData.title);
   }
 
   simpleLogger('結束爬取', ['Complete']);
